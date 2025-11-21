@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # Serviço gRPC
+  grpc-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.grpc
+    container_name: sales-grpc-server
+    ports:
+      - "50051:50051"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - XML_FILE=/app/data/sales_data.xml
+    networks:
+      - sales-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import grpc; grpc.insecure_channel('localhost:50051')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Serviço XML-RPC
+  xmlrpc-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.xmlrpc
+    container_name: sales-xmlrpc-server
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - XML_FILE=/app/data/sales_data.xml
+      - HOST=0.0.0.0
+      - PORT=8000
+    networks:
+      - sales-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import xmlrpc.client; xmlrpc.client.ServerProxy('http://localhost:8000/RPC2').system.listMethods()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Serviço de conversão CSV para XML
+  converter:
+    build:
+      context: .
+      dockerfile: Dockerfile.converter
+    container_name: sales-converter
+    volumes:
+      - ./data:/app/data
+    environment:
+      - CSV_FILE=/app/data/sales.csv
+      - XML_FILE=/app/data/sales_data.xml
+      - XSD_FILE=/app/data/sales_schema.xsd
+    networks:
+      - sales-network
+    command: >
+      sh -c "python csv_to_xml_converter.py 
+             /app/data/sales.csv 
+             /app/data/sales_data.xml 
+             /app/data/sales_schema.xsd"
+
+networks:
+  sales-network:
+    driver: bridge
+
+volumes:
+  data:

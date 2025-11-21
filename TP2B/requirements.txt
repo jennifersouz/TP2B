@@ -1,0 +1,17 @@
+# requirements-grpc.txt
+grpcio==1.60.0
+grpcio-tools==1.60.0
+lxml==5.1.0
+protobuf==4.25.1
+
+# requirements-xmlrpc.txt
+lxml==5.1.0
+
+# requirements-converter.txt
+lxml==5.1.0
+
+# requirements-client.txt
+grpcio==1.60.0
+lxml==5.1.0
+protobuf==4.25.1
+tabulate==0.9.0

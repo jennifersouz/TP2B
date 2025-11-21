@@ -1,0 +1,32 @@
+# Dockerfile.grpc
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Instalar dependências do sistema
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libxml2-dev \
+    libxslt-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar requirements
+COPY requirements-grpc.txt .
+RUN pip install --no-cache-dir -r requirements-grpc.txt
+
+# Gerar código gRPC a partir do proto
+COPY sales.proto .
+RUN python -m grpc_tools.protoc \
+    -I. \
+    --python_out=. \
+    --grpc_python_out=. \
+    sales.proto
+
+# Copiar código do servidor
+COPY grpc_server.py .
+
+# Expor porta
+EXPOSE 50051
+
+# Comando de inicialização
+CMD ["python", "grpc_server.py", "/app/data/output.xml", "50051"]

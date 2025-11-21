@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           targetNamespace="http://sales.example.com"
+           xmlns:tns="http://sales.example.com"
+           elementFormDefault="qualified">
+
+    <!-- Definição do elemento raiz -->
+    <xs:element name="SalesRecords">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Record" type="tns:RecordType" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Tipo complexo para cada registro -->
+    <xs:complexType name="RecordType">
+        <xs:sequence>
+            <xs:element name="RowID" type="xs:int"/>
+            <xs:element name="OrderID" type="xs:string"/>
+            <xs:element name="OrderDate" type="xs:date"/>
+            <xs:element name="ShipDate" type="xs:date"/>
+            <xs:element name="ShipMode" type="xs:string"/>
+            <xs:element name="CustomerID" type="xs:string"/>
+            <xs:element name="CustomerName" type="xs:string"/>
+            <xs:element name="Segment" type="tns:SegmentType"/>
+            <xs:element name="Country" type="xs:string"/>
+            <xs:element name="City" type="xs:string"/>
+            <xs:element name="State" type="xs:string"/>
+            <xs:element name="PostalCode" type="xs:string"/>
+            <xs:element name="Region" type="tns:RegionType"/>
+            <xs:element name="RetailSalesPeople" type="xs:string"/>
+            <xs:element name="ProductID" type="xs:string"/>
+            <xs:element name="Category" type="xs:string"/>
+            <xs:element name="SubCategory" type="xs:string"/>
+            <xs:element name="ProductName" type="xs:string"/>
+            <xs:element name="Returned" type="xs:string"/>
+            <xs:element name="Sales" type="xs:decimal"/>
+            <xs:element name="Quantity" type="xs:int"/>
+            <xs:element name="Discount" type="xs:decimal"/>
+            <xs:element name="Profit" type="xs:decimal"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Restrições de tipos -->
+    <xs:simpleType name="SegmentType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Consumer"/>
+            <xs:enumeration value="Corporate"/>
+            <xs:enumeration value="Home Office"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="RegionType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="South"/>
+            <xs:enumeration value="West"/>
+            <xs:enumeration value="East"/>
+            <xs:enumeration value="Central"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

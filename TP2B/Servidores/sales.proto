@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package sales;
+
+// Serviço de consultas de vendas
+service SalesService {
+    // Buscar registros por região
+    rpc GetRecordsByRegion(RegionRequest) returns (RecordsResponse);
+    
+    // Buscar registros por categoria
+    rpc GetRecordsByCategory(CategoryRequest) returns (RecordsResponse);
+    
+    // Obter estatísticas de vendas
+    rpc GetSalesStats(StatsRequest) returns (StatsResponse);
+    
+    // Buscar registros por cliente
+    rpc GetRecordsByCustomer(CustomerRequest) returns (RecordsResponse);
+    
+    // Consulta XPath personalizada
+    rpc ExecuteXPath(XPathRequest) returns (XPathResponse);
+}
+
+// Mensagens de requisição
+message RegionRequest {
+    string region = 1;
+}
+
+message CategoryRequest {
+    string category = 1;
+}
+
+message StatsRequest {
+    string field = 1;  // region, category, segment
+}
+
+message CustomerRequest {
+    string customer_id = 1;
+}
+
+message XPathRequest {
+    string xpath_query = 1;
+}
+
+// Mensagens de resposta
+message SalesRecord {
+    int32 row_id = 1;
+    string order_id = 2;
+    string order_date = 3;
+    string ship_date = 4;
+    string ship_mode = 5;
+    string customer_id = 6;
+    string customer_name = 7;
+    string segment = 8;
+    string country = 9;
+    string city = 10;
+    string state = 11;
+    string postal_code = 12;
+    string region = 13;
+    string retail_sales_people = 14;
+    string product_id = 15;
+    string category = 16;
+    string sub_category = 17;
+    string product_name = 18;
+    string returned = 19;
+    double sales = 20;
+    int32 quantity = 21;
+    double discount = 22;
+    double profit = 23;
+}
+
+message RecordsResponse {
+    repeated SalesRecord records = 1;
+    int32 total_count = 2;
+}
+
+message StatsResponse {
+    map<string, double> total_sales = 1;
+    map<string, double> total_profit = 2;
+    map<string, int32> record_count = 3;
+}
+
+message XPathResponse {
+    repeated string results = 1;
+    int32 result_count = 2;
+}
